@@ -1,11 +1,16 @@
 package com.example.earthquake;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -37,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Quake> earthquakes = new ArrayList<>();
     private static final String TAG = "EARTHQUAKE";
 
+    ArrayList<Double> latitudes = new ArrayList<>();
+    ArrayList<Double> longitudes = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +60,36 @@ public class MainActivity extends AppCompatActivity {
         refreshEarthquakes();
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId(); // Get the ID of the selected menu item
+        if (id == R.id.menu_refresh) {
+            refreshQuakes();
+            return true;
+        }
+        else if (id == R.id.menu_map) {
+            Intent i = new Intent(this, earthQuakeMap.class);
+            Bundle bundle = new Bundle();
+            i.putExtra("latitudes", latitudes);
+            i.putExtra("longitudes", longitudes);
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshQuakes() {
+        refreshEarthquakes();
     }
     private void refreshEarthquakes() {
         // Get the XML
@@ -127,8 +165,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void addNewQuake(Quake _quake) {
         earthquakes.add(_quake); // Add the new quake to our list of earthquakes.
+        latitudes.add(_quake.getLocation().getLatitude());
+        longitudes.add(_quake.getLocation().getLongitude());
         aa.notifyDataSetChanged(); // Notify the array adapter of a change.
     }
 }

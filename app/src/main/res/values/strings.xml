@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Earthquake</string>
     <string name="quake_feed">https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.atom</string>
+    <string name="title_activity_earth_quake_map">earthQuakeMap</string>
 </resources>
